@@ -1,17 +1,24 @@
 const express = require('express');
+const path = require('path');
+
 const app = express();
+const publicPath=path.join(__dirname,'public')
 
-app.get("/", (req, resp) => {
-    console.log(req.query.name)
-    resp.send("Welcome,"+req.query.name);
+//pehla tarika
+//app.use(express.static(publicPath));
+
+//dusra tarika
+//default rout
+app.get('/', (req,res) =>{
+  res.sendFile(`${publicPath}/index.html`);
+});
+//rout ka name alag bhi rakh sakte hain
+app.get('/aboutus', (req,res) =>{
+  res.sendFile(`${publicPath}/about.html`);
 });
 
-app.get("/about", (req, resp) => {
-    resp.send("Welcome, This is a About Page");
-});
-
-app.get("/help", (req, resp) => {
-    resp.send("Welcome, This is a Help Page");
+app.get('/help', (req,res) =>{
+  res.sendFile(`${publicPath}/help.html`);
 });
 
 
