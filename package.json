@@ -1,0 +1,23 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "nodejs class",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Style970/nodejs-class.git"
+  },
+  "author": "sher khan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Style970/nodejs-class/issues"
+  },
+  "homepage": "https://github.com/Style970/nodejs-class#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
