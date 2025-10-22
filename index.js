@@ -1,19 +1,10 @@
 const express = require('express');
+const reqFilter = require('./middileware');
+
 const app = express();
-// middilware
-const reqFilter = (req, resp, next) => {
-    if (!req.query.age) {
-        resp.send("Please provide your age in url")
-    }
-    else if (req.query.age<18) {
-        resp.send("You are under aged")
-    }
-    else {
-        next();
-    }
-}
-// ye hai app lavel middileware ye har page main apply ho jaega
-app.use(reqFilter);
+const route = express.Router();
+// ye hai route lavel middileware
+route.use(reqFilter);
 
 app.get('/', (res, resp) => {
     resp.send('Welcome to Home page')
@@ -22,4 +13,15 @@ app.get('/', (res, resp) => {
 app.get('/users', (res, resp) => {
     resp.send('Welcome to Users page')
 });
+
+// jis jis main middileware use karna hai uske aage route laga den
+route.get('/about', (res, resp) => {
+    resp.send('Welcome to about page')
+});
+
+route.get('/contact', (res, resp) => {
+    resp.send('Welcome to contact us page')
+});
+
+app.use('/', route);
 app.listen(5000)
