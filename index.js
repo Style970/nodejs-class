@@ -2,8 +2,8 @@
 const dbconn = require('./mongodbConn');
 //data read karne ka code
 const main = async ()=>{
-  let data = await dbconn();
-  data = await data.find().toArray();
+  let db = await dbconn();
+  data = await db.find().toArray();
   console.log(data);
 }
 
