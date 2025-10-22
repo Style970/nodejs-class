@@ -1,25 +1,25 @@
 const express = require('express');
-const path = require('path');
-
 const app = express();
-const publicPath=path.join(__dirname,'public')
+// middilware
+const reqFilter = (req, resp, next) => {
+    if (!req.query.age) {
+        resp.send("Please provide your age in url")
+    }
+    else if (req.query.age<18) {
+        resp.send("You are under aged")
+    }
+    else {
+        next();
+    }
+}
+// ye hai app lavel middileware ye har page main apply ho jaega
+app.use(reqFilter);
 
-//pehla tarika
-//app.use(express.static(publicPath));
-
-//dusra tarika
-//default rout
-app.get('/', (req,res) =>{
-  res.sendFile(`${publicPath}/index.html`);
+app.get('/', (res, resp) => {
+    resp.send('Welcome to Home page')
 });
-//rout ka name alag bhi rakh sakte hain
-app.get('/aboutus', (req,res) =>{
-  res.sendFile(`${publicPath}/about.html`);
+
+app.get('/users', (res, resp) => {
+    resp.send('Welcome to Users page')
 });
-
-app.get('/help', (req,res) =>{
-  res.sendFile(`${publicPath}/help.html`);
-});
-
-
-app.listen(5000);
+app.listen(5000)
