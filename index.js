@@ -1,22 +1,28 @@
 const express = require('express');
-const multer = require('multer');
-
+const EventEmitter = require('events');
 const app = express();
+const event = new EventEmitter();
 
-const upload = multer({
-    storage: multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, 'uploads')
-        },
-        filename: function (req, file, cb) {
-            cb(null, file.fieldname + "-" + Date.now() + ".jpg")
-        }
-    })
-    //ye wahi name dena hai jo postman main hoga
-}).single('file_name');
-
-app.post("/upload", upload, (req, resp) => {
-    resp.send("file uploaded...")
+let num = 0;
+event.on('countApi', ()=>{
+  num++;
+  console.log('event call ',num);
 });
 
-app.listen(5000)
+app.get('/', (req,res)=>{
+  res.send('home api call');
+  //event generate kiya hai
+  event.emit('countApi');
+});
+
+app.get('/list', (req,res)=>{
+  res.send('list api call');
+});
+
+app.get('/update', (req,res)=>{
+  res.send('update api call');
+    //event generate kiya hai
+  event.emit('countApi');
+});
+
+app.listen(5000);
