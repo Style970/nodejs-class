@@ -19,4 +19,6 @@ app.post("/upload", upload, (req, resp) => {
     resp.send("file uploaded...")
 });
 
+//uploads folder bana ke run karna
+
 app.listen(5000)
