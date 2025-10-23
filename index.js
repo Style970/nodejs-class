@@ -1,57 +1,53 @@
-const mongoose = require('mongoose');
+const express = require('express');
+require("./config");
+const Product = require('./product');
+const app = express();
 
- mongoose.connect("mongodb+srv://hinakhatoonsk_db_user:lMMNE5XVUSJGPtts@sherali.z1funb0.mongodb.net/?retryWrites=true&w=majority&appName=sherAli");
-  
-   const productSchema = new mongoose.Schema({
-     name:String,
-     price:Number,
-     brand:String,
-     category:String
-   });
+// strung ko json main convert karega
+app.use(express.json());
 
-//insert data
-const insertDB = async ()=>{
-   const productModel = mongoose.model('products',productSchema);
-   let data = new productModel({
-     name:'5g pro', 
-     price: 5000,
-     brand:'lg',
-     category:'touch phon'
-   });
-   let result = await data.save();
-   console.log(result); 
-}
+app.post("/create", async (req, resp) => {
+    let data = new Product(req.body);
+    const result = await data.save();
+    resp.send(result);
+});
 
-//update data
-const updateDB = async ()=>{
-   const productModel = mongoose.model('products',productSchema);
-   let data = await productModel.updateOne(
-     {name: 'not 7 pr'}, 
-     {
-       $set: {price: 7000}
-     }
-     );
-   
-   console.log(data); 
-}
+app.get("/list", async (req, resp) => {
+    let data = await Product.find();
+    resp.send(data);
+})
 
-//delete data
-const deleteDB = async ()=>{
-   const productModel = mongoose.model('products',productSchema);
-   let data = await productModel.deleteOne(
-     {name: 'not 7 pro'}
-     )
-   
-   console.log(data); 
-}
+app.delete("/delete/:_id", async (req, resp) => {
+    console.log(req.params)
+    let data = await Product.deleteOne(req.params);
+    resp.send(data);
+})
 
-//find data
-const findDB = async ()=>{
-   const productModel = mongoose.model('products',productSchema);
-   let data = await productModel.find({category: "iphon"});
-   
-   console.log(data); 
-}
 
-//jis function ko run karna hai ek ek kare chek karen
-findDB();
+app.put("/update/:_id",async (req, resp) => {
+    console.log(req.params)
+    let data = await Product.updateOne(
+        req.params,
+        {$set: req.body}
+    );
+    resp.send(data);
+})
+
+//search
+app.get("/search/:key", async (req, resp) => {
+    console.log(req.params.key);
+    let data = await Product.find(
+      {
+        "$or":[
+          //ek fild lagaoge to single fild main kaam karega
+          {"name":{$regex:req.params.key}},
+          {"brand":{$regex:req.params.key}}
+          ]
+      }
+      );
+      
+    resp.send(data);
+})
+
+
+app.listen(5000)
